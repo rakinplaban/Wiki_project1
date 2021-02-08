@@ -19,6 +19,9 @@ def index(request):
         "entries": util.list_entries()
     })
 
+def retrieve_content(request):
+    pass
+
 def newpg(request):
     if request.method == "POST":
         form = Newform(request.POST)
