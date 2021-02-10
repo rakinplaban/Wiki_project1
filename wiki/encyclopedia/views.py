@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import HttpResponse,HttpResponseRedirect
 from django import forms
-import markdown2
+from markdown2 import Markdown
 from . import util
 
 class Newform(forms.Form):
@@ -19,8 +19,21 @@ def index(request):
         "entries": util.list_entries()
     })
 
-def retrieve_content(request):
-    pass
+#def title_loader(request,title):
+#    return 
+
+def retrieve_content(request,entry):
+    markdowner = Markdown()
+    getentry = util.get_entry(entry)
+    if getentry is None:
+        return render(request,"encyclopedia/pagenotfound.html",{
+            "entryTitle" : entry
+        })
+    else:
+        return render(request,"encyclopedia/entry.html",{
+            "entry" : markdowner.convert(getentry),
+            "entryTitle" : entry
+        })
 
 def newpg(request):
     if request.method == "POST":
@@ -28,7 +41,7 @@ def newpg(request):
         if form.is_valid():
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
-            if(util.get_entry(title) is None):
+            if(util.get_entry(title) is None or form.cleaned_data["edit"] is True):
                 util.save_entry(title,content)
                 return HttpResponseRedirect(reverse('entry',kwargs={'entry':title}))
 
