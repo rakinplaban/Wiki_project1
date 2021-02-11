@@ -38,6 +38,7 @@ def entry(request,entry):
 
 def edit(request,entry):
     entrypage = util.get_entry(entry)
+    # a condition has been removed
     form = Newform()
     form.field["title"].initial = entry
     form.field["title"].widget = form.HiddenInput()
