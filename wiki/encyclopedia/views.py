@@ -13,6 +13,7 @@ class Newform(forms.Form):
         "class" : "form-control",
         "cols" : 40
         }))
+    edit =  forms.BooleanField(initial=False,widget=forms.HiddenInput(),required=False)
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -22,7 +23,7 @@ def index(request):
 #def title_loader(request,title):
 #    return 
 
-def retrieve_content(request,entry):
+def entry(request,entry):
     markdowner = Markdown()
     getentry = util.get_entry(entry)
     if getentry is None:
@@ -35,6 +36,19 @@ def retrieve_content(request,entry):
             "entryTitle" : entry
         })
 
+def edit(request,entry):
+    entrypage = util.get_entry(entry)
+    form = Newform()
+    form.field["title"].initial = entry
+    form.field["title"].widget = form.HiddenInput()
+    form.field["content"].initial = entrypage
+    form.field["edit"].initial = True
+    return render(request,"encyclopedia/newpg.html",{
+        "form" : form,
+        "edit" : form.field["edit"].initial,
+        "entryTitle": form.field["title"].initial
+    })
+
 def newpg(request):
     if request.method == "POST":
         form = Newform(request.POST)
@@ -43,20 +57,38 @@ def newpg(request):
             content = form.cleaned_data["content"]
             if(util.get_entry(title) is None or form.cleaned_data["edit"] is True):
                 util.save_entry(title,content)
-                return HttpResponseRedirect(reverse('entry',kwargs={'entry':title}))
+                return HttpResponseRedirect(reverse("entry",kwargs={'entry':title}))
 
             else:
                 return render(request, "encyclopedia/newpg.html",{
-                    "form" : Newform(),
+                    "form" : form,
                     "existing" : True,
                     "entry" : title
                 })
 
         else:
             return render(request, "encyclopedia/newpg.html",{
-                    "form" : Newform(),
+                    "form" : form,
                     "existing" : False
                 })
     return render(request, "encyclopedia/newpg.html", {
-        "form" : Newform()
+        "form" : Newform(),
+        "existing" : False
     })
+
+def search(request):
+    value = request.GET.get('q','')
+    if(util.get_entry(value) is None):
+        substreng = []
+        for entry in util.list_entries():
+            if value.upper() in entry.upper():
+                substreng.append(entry)
+
+        return render(request,"encyclopedia/index.html",{
+            "entries" : substreng,
+            "search" : True,
+            "value" : value
+        })
+
+    else:
+        return HttpResponseRedirect(reverse('entry',kwargs={'entry':value}))
