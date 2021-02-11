@@ -41,7 +41,7 @@ def edit(request,entry):
     # a condition has been removed
     form = Newform()
     form.fields["title"].initial = entry
-    form.fields["title"].widget = form.HiddenInput()
+    form.fields["title"].widget = forms.HiddenInput()
     form.fields["content"].initial = entrypage
     form.fields["edit"].initial = True
     return render(request,"encyclopedia/newpg.html",{
