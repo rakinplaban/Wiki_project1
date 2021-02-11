@@ -46,8 +46,8 @@ def edit(request,entry):
     form.fields["edit"].initial = True
     return render(request,"encyclopedia/newpg.html",{
         "form" : form,
-        "edit" : form.field["edit"].initial,
-        "entryTitle": form.field["title"].initial
+        "edit" : form.fields["edit"].initial,
+        "entryTitle": form.fields["title"].initial
     })
 
 def newpg(request):
