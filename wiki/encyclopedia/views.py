@@ -40,10 +40,10 @@ def edit(request,entry):
     entrypage = util.get_entry(entry)
     # a condition has been removed
     form = Newform()
-    form.field["title"].initial = entry
-    form.field["title"].widget = form.HiddenInput()
-    form.field["content"].initial = entrypage
-    form.field["edit"].initial = True
+    form.fields["title"].initial = entry
+    form.fields["title"].widget = form.HiddenInput()
+    form.fields["content"].initial = entrypage
+    form.fields["edit"].initial = True
     return render(request,"encyclopedia/newpg.html",{
         "form" : form,
         "edit" : form.field["edit"].initial,
