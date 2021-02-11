@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.http import HttpResponse,HttpResponseRedirect
 from django import forms
 from markdown2 import Markdown
+import secrets
 from . import util
 
 class Newform(forms.Form):
@@ -76,6 +77,11 @@ def newpg(request):
         "form" : Newform(),
         "existing" : False
     })
+
+def random(request):
+    entries =  util.list_entries()
+    randomchoose = secrets.choice(entries)
+    return HttpResponseRedirect(reverse("entry",kwargs={'entry': randomchoose}))
 
 def search(request):
     value = request.GET.get('q','')
