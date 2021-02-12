@@ -59,14 +59,10 @@ def newpg(request):
             content = form.cleaned_data["content"]
             if(util.get_entry(title) is None or form.cleaned_data["edit"] is True):
                 util.save_entry(title,content)
-                return HttpResponseRedirect(reverse("entry",kwargs={'entry':title}))
+                return HttpResponseRedirect(reverse("str:entry",kwargs={'entry':title}))
 
             else:
-                return render(request, "encyclopedia/newpg.html",{
-                    "form" : form,
-                    "existing" : True,
-                    "entry" : title
-                })
+                return HttpResponse("<h1 style=\"color:red\">This content already exists!</h1>")
 
         else:
             return render(request, "encyclopedia/newpg.html",{
@@ -83,9 +79,13 @@ def random(request):
     randomchoose = secrets.choice(entries)
     return HttpResponseRedirect(reverse("entry",kwargs={'entry': randomchoose}))
 
+
 def search(request):
     value = request.GET.get('q','')
-    if(util.get_entry(value) is None):
+    if(util.get_entry(value) is not None):
+        return HttpResponseRedirect(reverse('entry',kwargs={'entry':value}))
+
+    else:
         substreng = []
         for entry in util.list_entries():
             if value.upper() in entry.upper():
@@ -97,5 +97,4 @@ def search(request):
             "value" : value
         })
 
-    else:
-        return HttpResponseRedirect(reverse('entry',kwargs={'entry':value}))
+        
