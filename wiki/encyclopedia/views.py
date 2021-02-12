@@ -81,20 +81,21 @@ def random(request):
 
 
 def search(request):
-    value = request.GET.get('q','')
-    if(util.get_entry(value) is not None):
-        return HttpResponseRedirect(reverse('entry',kwargs={'entry':value}))
+    if request.method == "GET":
+        value = request.GET.get('q','')
+        if(util.get_entry(value) is not None):
+            return HttpResponseRedirect(reverse('entry',kwargs={'entry':value}))
 
-    else:
-        substreng = []
-        for entry in util.list_entries():
-            if value.upper() in entry.upper():
-                substreng.append(entry)
+        else:
+            substreng = []
+            for entry in util.list_entries():
+                if value.upper() in entry.upper():
+                    substreng.append(entry)
 
-        return render(request,"encyclopedia/index.html",{
-            "entries" : substreng,
-            "search" : True,
-            "value" : value
-        })
+            return render(request,"encyclopedia/index.html",{
+                "entries" : substreng,
+                "search" : True,
+                "value" : value
+            })
 
         
