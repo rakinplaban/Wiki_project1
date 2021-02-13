@@ -62,7 +62,7 @@ def newpg(request):
                 return HttpResponseRedirect(reverse("wiki_page",kwargs={'entry':title}))
 
             else:
-                return HttpResponse("<h1 style=\"color:red\">This content already exists!</h1>")
+                return render(request,"encyclopedia/contentexists.html")
 
         else:
             return render(request, "encyclopedia/newpg.html",{
