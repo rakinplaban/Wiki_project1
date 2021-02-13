@@ -59,7 +59,7 @@ def newpg(request):
             content = form.cleaned_data["content"]
             if(util.get_entry(title) is None or form.cleaned_data["edit"] is True):
                 util.save_entry(title,content)
-                return HttpResponseRedirect(reverse("str:entry",kwargs={'entry':title}))
+                return HttpResponseRedirect(reverse("wiki_page",kwargs={'entry':title}))
 
             else:
                 return HttpResponse("<h1 style=\"color:red\">This content already exists!</h1>")
@@ -77,14 +77,14 @@ def newpg(request):
 def random(request):
     entries =  util.list_entries()
     randomchoose = secrets.choice(entries)
-    return HttpResponseRedirect(reverse("entry",kwargs={'entry': randomchoose}))
+    return HttpResponseRedirect(reverse("wiki_page",kwargs={'entry': randomchoose}))
 
 
 def search(request):
     if request.method == "GET":
         value = request.GET.get('q','')
         if(util.get_entry(value) is not None):
-            return HttpResponseRedirect(reverse('entry',kwargs={'entry':value}))
+            return HttpResponseRedirect(reverse('wiki_page',kwargs={'entry':value}))
 
         else:
             substreng = []

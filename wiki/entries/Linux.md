@@ -1,3 +1,2 @@
-# Linux #
-
-Linux is an operating system.
+# Linux
+is an operating system.

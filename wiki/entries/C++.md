@@ -1,9 +1,2 @@
-# OOP00
-
-
-
-
-
-
-
-updated c language
+#C++
+C++ is an object-oriented version of C programming.
